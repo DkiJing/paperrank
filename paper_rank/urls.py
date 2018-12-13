@@ -15,10 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.urls import include, path
-from homepage import views
+from crawler import views
 
 urlpatterns = [
-    path('homepage/', views.index),
     path('admin/', admin.site.urls),
+    path('homepage/', views.index)
 ]
