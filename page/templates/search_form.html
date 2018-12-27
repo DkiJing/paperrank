@@ -1,0 +1,35 @@
+{%extends "mainstyle.html" %}
+
+    {% block mainbody %}
+    <head>
+    <title>Paper Rank</title>
+    </head>
+
+    <div id="searchBox">
+      <div id="bg">
+      </div>
+      <div id="content">
+        <div>
+	       <table align = "center">
+            <tbody id="search-table">
+              <tr id="searchrow1" class="search-criteria-item">
+                  <input type="text" class="focusinput" id="value(input1)" placeholder="please input the content you want to search"></input>
+                  <select class="selectOption" id="select1">
+                    <option id="Title" value="Title">Title</option>
+                    <option id="Keyword" value="Keyword">Keyword</option>
+                    <option id="Author" value="Author">Author</option>
+                  </select>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="operationButton">
+          <input type="button" value="+" name="add" onclick="addSelectLine()">
+          <input type="button" value="-" name="delete" onclick="deleteSelectLine()">
+          <button class="search_Button" onclick="Search()">Search</button>
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+

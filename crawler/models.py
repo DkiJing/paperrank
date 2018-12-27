@@ -1,67 +1,98 @@
 from django.db import models
+from crawler.indexModels import es_insert
+
 
 # Create your models here.
 class Author(models.Model):
     id = models.AutoField(unique=True,primary_key=True)
-    first_name = models.CharField(null=True,max_length=1000)
-    last_name = models.CharField(null=True,max_length=1000)
-    # test = models.CharField(null=True,max_length=1000)
-    # name = models.CharField(max_length=1000)
-    # acdemic_unit = models.CharField(max_length=1000, blank=True, null=True)
+    name = models.CharField(null=True,max_length=250, unique=True)
+
+    def __str__(self):
+        if self.name != None:
+            return self.name
 
 
     class Meta:
         managed = True
         db_table = 'author'
 
-    # @classmethod
-    # def insert(self, firstName, lastName, Unit):
-    #     id = Author.objects.latest('id').id + 1
-    #     obj = Author(id=id, first_name=firstName, last_name=lastName, acdemic_unit=Unit)
-    #     obj.save()
+class Citation(models.Model):
+    id = models.AutoField(unique=True, primary_key=True)
+    url_id = models.CharField(unique=True, max_length=254)
+    # title = models.CharField(unique=True, max_length=254)
+    cited_times = models.IntegerField(null=True)
+    source = models.CharField(null=True,max_length=254)
+
+    class Meta:
+        managed = True
+        db_table = 'citation'
 
 class Paper(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
     url = models.CharField(null=True, max_length=1000)
-    title = models.CharField(max_length=300)
+    title = models.CharField(unique=True,max_length=254)
     date = models.IntegerField(null=True)
-    field = models.CharField(null=True,max_length=100)
+    source = models.CharField(null=True,max_length=100)
     publisher = models.CharField(null=True,max_length=1000)
     cited_times = models.IntegerField(null=True)
-    # isbn = models.CharField(null=True,db_column='ISBN', max_length=100)  # Field name made lowercase.
-    # pages = models.CharField(null=True,max_length=100)
-    # sponsored = models.CharField(null=True,db_column='Sponsored', max_length=100)  # Field name made lowercase.
-    abstract = models.CharField(null=True, max_length=8000)
+    abstract = models.CharField(null=True, max_length=7000)
+    keywords =  models.CharField(null=True, max_length=7000)
     authors = models.ManyToManyField(to='Author')
-    def __str__(self):
-        return self.title
+    cited = models.ManyToManyField(to='Citation')
+
+
+    def getPaper(self, id):
+        paper = Paper.objects.get(id=id)
+        authors = []
+        citedlist = []
+        a = paper.authors.all()
+        for author in a:
+            authors.append(author.name)
+        c = paper.cited.all()
+        for citedby in c:
+            cited = {}
+            cited['url_id'] = citedby.url_id
+            cited['source'] = citedby.source
+            cited['cited_times'] = citedby.cited_times
+            citedlist.append(cited)
+        # print(citedlist)
+        info = {}
+        info['url_id'] =  paper.url
+        info['title'] = (paper.title)
+        info['date'] = (paper.date)
+        info['source'] = (paper.source)
+        info['publisher'] = (paper.publisher)
+        info['cited_times'] = (paper.cited_times)
+        info['abstract'] = (paper.abstract)
+        info['keywords'] = (paper.keywords)
+        info['authors'] = (authors)
+        info['citedBy'] = (citedlist)
+        return info
 
     class Meta:
         managed = True
         db_table = 'paper'
 
 
-    def insert(self, url, title, date, field, publisher, cited_times,abstract,author):
+    def insert(self, url, title, date, source, publisher, cited_times, abstract, author, keywords, citations):
         # id = Paper.objects.latest('id').id + 1
-        obj = Paper.objects.create( url=url, title=title, date=date, field=field, publisher=publisher, cited_times=cited_times,abstract=abstract)
+        obj = Paper.objects.create( url=url, title=title, date=date, source=source, publisher=publisher, cited_times=cited_times,abstract=abstract, keywords = keywords)
+        id = obj.id
+        es_insert(id, title, abstract, keywords, ','.join(author))
         for person in author:
-            author = Author.objects.create(first_name = person[0],last_name = person[1])
-            obj.authors.add(author)
+            # print(person)
+            try:
+                author = Author.objects.create(name = person)
+                obj.authors.add(author)
+            except BaseException as e:
+                es_insert(id, title, abstract, keywords.lower())
+                print(e)
 
+        for key in citations[0]:
+            # print(citations[0])
+            try:
+                citation = Citation.objects.create(url_id = key, cited_times = citations[0][key], source = source )
+                obj.cited.add(citation)
+            except BaseException as e:
+                print(e)
 
-
-# class PaperAuthor(models.Model):
-#     paperid = models.ForeignKey(Paper, models.DO_NOTHING, db_column='paperid', primary_key=True)
-#     authorid = models.ForeignKey(Author, models.DO_NOTHING, db_column='authorid')
-#     author_type = models.CharField(null=True,max_length=1000)
-#
-#     class Meta:
-#         managed = True
-#         db_table = 'paper_author'
-#         unique_together = (('paperid', 'authorid'),)
-#
-#     # @classmethod
-#     def insert(self, paperid, authorid, authortype):
-#         paper = Paper.objects.get(id=paperid)
-#         author = Author.objects.get(id=authorid)
-#         paper.paperauthor_set.create(paperid=paper, authorid=author, author_type=authortype)

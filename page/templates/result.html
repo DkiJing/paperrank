@@ -1,0 +1,107 @@
+{%extends "mainstyle.html" %}
+
+{% block mainbody %}
+
+<head>
+<title>Paper Rank - Result</title>
+</head>
+
+<body>
+  <div class = 'sidebar'>
+    <form method = 'post'>
+      <div class="refinelist">
+          <h4 id="searchCondition">{{ search_condition }}</h4>
+          {%ifequal date ''%}
+          {%else%}
+            <p >Date weight:  <span id="date1">{{ date }}</span></p>
+          {%endifequal %}
+          {%ifequal cited ''%}
+          {%else%}
+              <p>Cited weight: <span id="cited1">{{ cited }}</span></p>
+          {%endifequal %}
+          {%ifequal start ''%}
+          {%else%}
+              <p>Start year: <span id="start1">{{ start }}</span></p>
+          {%endifequal %}
+          {%ifequal end ''%}
+          {%else%}
+              <p>End year: <span id="end1">{{ end }}</span></p>
+          {%endifequal %}
+          {%ifequal publisher ''%}
+          {%else%}
+              <p>Publisher: <span id="publisher1">{{ publisher }}</span></p>
+          {%endifequal %}
+      </div>
+      <div class = "refinelist" id = 'publishyear'>
+        <h4 class="refineclass">Publish Year</h4>
+        <div class="refineitem">
+          Start year: <input type = 'text' value="1900" id ="start">
+        </div>
+        <div class="refineitem">
+            End year: <input type = 'text' value="2018" id ="end">
+        </div>
+      </div>
+      <div class = "refinelist" id = 'publisher'>
+        <h4 class="refineclass">Publisher</h4>
+        <div class="refineitem">
+          <input name="publisher1" id ="IEEE"type = 'radio'/>IEEE
+        </div>
+        <div class="refineitem">
+            <input name="publisher1" id ="ACM" type = 'radio'/>ACM
+        </div>
+      </div>
+    </form>
+    <button id="second_search" onclick="Second_search()">Search</button>
+  </div>
+    <div id="main-content">
+      <div class = "sort-by">
+          <p id="sort_by">
+              Sort by:     Date:
+              <span>
+                      <select  id="date" class="sort-select" onchange="test()">
+                      <option value="" >default</option>
+                          <option value="100">100%</option>
+                          <option value="75" >75%</option>
+                          <option value="50">50%</option>
+                          <option value="25">25%</option>
+                      </select>
+               </span>
+              Cited:
+              <span>
+                  <select  id="cited" class="sort-select">
+                      <option value="" >default</option>
+                      <option value="100">100%</option>
+                      <option value="75">75%</option>
+                      <option value="50">50%</option>
+                      <option value="25">25%</option>
+                  </select>
+               </span>
+              <span id="apply-button">
+                  <button id="apply" onclick="apply()">Apply</button>
+                  <button id="relevancy" onclick="original()">Default</button>
+              </span>
+
+          </p>
+      </div>
+      <div class = "paperlist">
+          {% for paper in contacts %}
+              <div class = "paper">
+                <h4><a href={{paper.url_id}} target="_blank">{{ paper.title }}</a></h4>
+                <p class="paperinfo">Publish year: {{ paper.date }}</p>
+                <p class="paperinfo">Source: {{ paper.source }}</p>
+                <p class="paperinfo">Publisher: {{ paper.publisher }}</p>
+                <p class="paperinfo">Cited times: {{ paper.cited_times }}</p>
+                  <p class="abstract">Abstract: {{ paper.abstract }}<span><a href={{paper.url_id}} target="_blank">view more</a></span></p>
+              </div>
+          {% endfor %}
+      </div>
+    <div class="page">
+        {% for p in page_number %}
+            <button  value={{ p }}, onclick="show({{ p }})" >{{ p }}</button>
+    {% endfor %}
+    </div>
+    </div>
+ </div>
+</body>
+
+{% endblock %}

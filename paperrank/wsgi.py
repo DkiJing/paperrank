@@ -1,5 +1,5 @@
 """
-WSGI config for paper_rank project.
+WSGI config for paperrank project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'paper_rank.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'paperrank.settings')
 
 application = get_wsgi_application()

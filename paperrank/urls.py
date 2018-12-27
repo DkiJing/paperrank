@@ -1,4 +1,4 @@
-"""paper_rank URL Configuration
+"""paperrank URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.1/topics/http/urls/
@@ -15,9 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from crawler import views
+
+from crawler import views as cv
+from page import views as pv
+from page import search
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('homepage/', views.index)
+    path('crawler/', cv.call_crawler_offline),
+    path('search-form/', search.search_form),
+    path("search-result/", pv.result)
 ]

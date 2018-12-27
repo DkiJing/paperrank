@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+    <style>
+        a{text-decoration: none}
+    </style>
+</head>
+<body>
+<p>Sort by</p>
+<input type="button" value="Date" name="sort_by_data">
+<input type="button" value="..." name="sort_by_..."><br>
+    <p>name</p>
+    {% for name in names %}
+        <p class="paper_id">{{ name.id }}&nbsp&nbsp&nbsp:&nbsp&nbsp&nbsp<a href="http://www.baidu.com" target="_blank">{{name.name}}</a></p>
+
+    <br>
+    {% endfor %}
+
+</form>
+
+</body>
+</html>

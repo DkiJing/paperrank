@@ -1,0 +1,194 @@
+*{
+    box-sizing: border-box;
+}
+
+body {
+  max-width: 1400px;
+  min-height: 500px;
+  margin-left: 50px;
+  margin-right: 50px;
+  box-shadow: 0 -5px 10px -3px #3F3F3F;
+  width: 100%;
+  display: table;
+}
+
+h4 {
+  margin: 0px;
+  padding: 10px
+}
+
+/*search page*/
+
+.search-criteria-item {
+  margin: auto;
+}
+
+#bg {
+  background-image: url(../images/writing.jpg);
+  background-size: 1400px 800px;
+  opacity: 0.5;
+  z-index: 1;
+  max-width: 1400px;
+  min-height: 600px;
+}
+
+#content {
+  position: absolute;
+  z-index: 2;
+  width: 75%;
+  height: 75%;
+  left: 12.5%;
+  top: 12.5%;
+  right: 12.5%;
+  bottom: 12.5%;
+  margin: auto;
+  text-align:center;
+}
+
+#searchBox {
+  position: relative;
+  max-width: 1400px;
+  min-height: 600px;
+}
+
+#search-table {
+  text-align: center;
+}
+
+#operationButton {
+  padding: 10px;
+}
+
+table {
+  text-align:center;
+  vertical-align:middle;
+}
+
+.focusinput,.selectOption, .bool_select,.sort-select {
+  border: 2px solid #a1a1a1;
+  border-radius:25px;
+  margin: 5px;
+  height: 35px;
+  font-size: 16px;
+}
+
+
+.focusinput {
+  width: 500px;
+}
+
+.focusinput:hover,.selectOption:hover,.bool_select:hover {
+  border-color:darkseagreen
+}
+
+/*result page*/
+/*
+.sidebar {
+  width: 278px;
+  text-align: center;
+  border-left: 1px solid #bababa;
+  border-right: 1px solid #bababa
+}
+*/
+a{text-decoration:none; }
+
+.sidebar{
+    width:25%;
+    height:100%;
+    float: left;
+    text-align: center;
+    border-right: 4px solid #B19693;
+    background-color: #D7C4BB;
+}
+
+.sort-by{
+    float: left;
+    width: 100%;
+    background-color: #D7C4BB;
+    border-bottom: 2px dashed #B19693;
+}
+.paper{
+    width: 100%;
+    float: left;
+    border-bottom: 1px solid #B19693;
+}
+
+.logo {
+  background-color: #BF6766;
+}
+
+.refinelist {
+  border-bottom: 2px dashed #B19693;
+  padding-bottom: 15px;
+}
+
+.refineitem {
+  padding: 2px
+}
+
+.paperinfo {
+  padding: 10px;
+  margin: 0;
+  font-style: normal;
+}
+
+.abstract {
+  padding: 10px
+}
+
+#test{
+    color: #BF6766;
+}
+
+
+#apply{
+    float: right;
+    margin: 0;
+    margin-top: 5px;
+    margin-right: 50px;
+}
+
+#main-content{
+  position: relative;
+  margin-right: 0;
+  width: 75%;
+  float: right;
+}
+
+#sort_by {
+  font-size: 18px;
+  font-family: sans-serif;
+  padding-left: 10px;
+}
+
+#relevancy {
+  float: right;
+  margin: 0;
+  margin-right: 50px;
+  margin-top: 5px;
+}
+
+button {
+   border: none;
+   padding: 6px 6px;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 16px;
+   border-radius: 25px;
+   border: 2px solid #a1a1a1;
+   margin: 10px;
+}
+
+input {
+  height: 35px;
+  font-size: 16px;
+  border-radius: 25px;
+  text-align: center;
+}
+
+p {
+  font-size: 16px;
+  font-family: sans-serif;
+}
+
