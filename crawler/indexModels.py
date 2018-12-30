@@ -3,7 +3,6 @@ from elasticsearch import Elasticsearch
 
 
 es = None
-# if __name__ == '__main__':
 es = Elasticsearch([{'host': '127.0.0.1', 'port': 9200}])
 
 def es_insert(paper_id, title, abstract, keyword, author):
@@ -16,7 +15,7 @@ def es_insert(paper_id, title, abstract, keyword, author):
     es.index(index='paperrank', doc_type='paper_information', id=paper_id, body=body)
 
 def search_index(queryDict):
-    print('!!!!!!')
+    print('---------------------')
     print(str(queryDict))
     first = queryDict.get('first')
     title = queryDict.get('Title')

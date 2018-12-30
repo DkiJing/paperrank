@@ -19,7 +19,6 @@ class Author(models.Model):
 class Citation(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
     url_id = models.CharField(unique=True, max_length=254)
-    # title = models.CharField(unique=True, max_length=254)
     cited_times = models.IntegerField(null=True)
     source = models.CharField(null=True,max_length=254)
 
@@ -55,7 +54,6 @@ class Paper(models.Model):
             cited['source'] = citedby.source
             cited['cited_times'] = citedby.cited_times
             citedlist.append(cited)
-        # print(citedlist)
         info = {}
         info['url_id'] =  paper.url
         info['title'] = (paper.title)
@@ -75,12 +73,10 @@ class Paper(models.Model):
 
 
     def insert(self, url, title, date, source, publisher, cited_times, abstract, author, keywords, citations):
-        # id = Paper.objects.latest('id').id + 1
         obj = Paper.objects.create( url=url, title=title, date=date, source=source, publisher=publisher, cited_times=cited_times,abstract=abstract, keywords = keywords)
         id = obj.id
         es_insert(id, title, abstract, keywords, ','.join(author))
         for person in author:
-            # print(person)
             try:
                 author = Author.objects.create(name = person)
                 obj.authors.add(author)
@@ -89,7 +85,6 @@ class Paper(models.Model):
                 print(e)
 
         for key in citations[0]:
-            # print(citations[0])
             try:
                 citation = Citation.objects.create(url_id = key, cited_times = citations[0][key], source = source )
                 obj.cited.add(citation)

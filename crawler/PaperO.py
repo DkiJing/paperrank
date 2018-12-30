@@ -19,7 +19,6 @@ class PaperO(object):
             self.abstract = '...'
         else:
             self.abstract = abstract
-        # self.url = url_head[self.source] + self.url_id
 
 
 def createPaper(id):
@@ -28,6 +27,6 @@ def createPaper(id):
                       p['publisher'], p['cited_times'], p['abstract'],\
                       p['keywords'], p['authors'], p['citedBy'])
     if(p['date'] == 1989):
-        print('############################')
+        print('---------------------------')
         print(paper.keywords)
     return paper

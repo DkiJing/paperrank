@@ -12,19 +12,13 @@ def crawler_offline(keyword_list):
         year = 2018
         page = 1420
         acm_url = 'https://dl.acm.org/results.cfm?query=recognition&Go.x=0&Go.y=0'
-        # browser.get(acm_url)
-        # time.sleep(3)
         for i in range(3):
-            print(i)
             ieee_url = 'https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=' \
                        + keyword \
                        + '&highlight=true&returnType=SEARCH&refinements=ContentType:Conferences&refinements=ContentType:Journals%20.AND.%20Magazines&refinements=ContentType:Early%20Access%20Articles&returnFacets=ALL&ranges=' \
                        + str(year - 2) + '_' + str(year) + '_Year'
             acm_url = 'https://dl.acm.org/results.cfm?query=' + keyword + '&start=' + str(page) \
                       + '&filtered=&within=owners%2Eowner%3DHOSTED&dte=&bfr=&srt=citedCount'
-
-
-            print(ieee_url)
             browser.get(ieee_url)
             time.sleep(5)
             html = browser.page_source
@@ -47,14 +41,11 @@ def get_each_citations_ieee(paperId,browser):
     html = browser.page_source
     soup = bs4.BeautifulSoup(html, features='lxml')
     section = soup.find('div', id = 'anchor-paper-citations-ieee')
-    # print(section)
     try:
         section = section.find_all('div', class_ = 'reference-container')
         for citation in section:
             title = citation.div.div.find(class_='description').text
             title = re.findall(re.compile('"(.*?)"'), title)
-            # print(title)
-            # print('!!!!!!!!!!!!!!!!!')
             id = citation.a['href'].split('/')[-1]
             try:
                 titlelist[id] = title
@@ -93,7 +84,6 @@ def get_keywords_ieee(paperId,browser):
             keystring += sectionlist[i]+' '
     except BaseException as e:
         print(e)
-    # print(sectionlist)
     return keystring
 
 
@@ -150,10 +140,6 @@ def get_each_citations_acm(id,browser):
 
 def get_papers_acm(html):
     browser = webdriver.Chrome()
-    # outpages = {}
-    # url = 'https://dl.acm.org/results.cfm?query=' + query + '&Go.x=0&Go.y=0'
-    # browser.get(url)
-    # html = browser.page_source
     out_soup = bs4.BeautifulSoup(html, 'lxml')
     title = None
     inpage_url = None
@@ -201,10 +187,6 @@ def get_papers_acm(html):
         outpage['cited_times'] = cited_times
         outpage['abstract'] = abstract
         outpage['kw'] = key_words
-        # print(key_words)
-        # print(outpage)
-        # Insert in this line
-        # print(authors)
         citations = get_each_citations_acm(inpage_url,browser)
         print(citations[0])
         try:
@@ -214,14 +196,13 @@ def get_papers_acm(html):
         except BaseException as e:
             print(e)
     browser.close()
-    # There is a problem on authors
 
 
 def get_papers_ieee(html):
     browser = webdriver.Chrome()
     soup = bs4.BeautifulSoup(html, features='lxml')
     paperLinkList = []
-    print("$!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+    print("--------------------------------------------\n")
     maintext = soup.find('div', class_='main-section')
     for paper in maintext.find_all('div', class_='List-results-items'):
         document_id,title, ieeeauthor, publisher, details_dic, abstract  = get_paper_ieee(paper)
@@ -237,7 +218,6 @@ def get_papers_ieee(html):
             print("after insert")
         except BaseException as e:
             print(e)
-        # print('after insert')
     browser.close()
 
 def get_paper_ieee(paper):
@@ -251,40 +231,36 @@ def get_paper_ieee(paper):
     print("get in ieee\n")
 
     document_id = paper.a['href'].replace('/document/', '').replace('/', '')
-    # print(document_id)
 
-    ###### title
+    # title
     titlelist = paper.a.text.split('\n')
     for s in titlelist:
         if (s.strip()):
             title += s.strip() + ' '
-    # print(title)
 
-    ###### authors
+    # authors
     ieeeauthor = paper.find_all('p', class_='author')[0].text.split(';')
     for i in range(len(ieeeauthor)):
         ieeeauthor[i] = ieeeauthor[i].replace('\n', '').strip()
     print(ieeeauthor)
 
-    ###### description
+    # description
     description = paper.find('div', class_='description')
 
-    ### publish_on
+    # publish_on
     publish_on_list = description.a.text.split('\n')
     for c in publish_on_list:
         if (c.strip()):
             publish_on += c.strip() + ' '
-    # print(publish_on)
 
-    ### publish_on_link
+    # publish_on_link
     publish_on_link = description.a["href"]
     # print(publish_on_link)
 
-    ###year/pages/cite/conference
+    # year/pages/cite/conference
     details = description.find_all('div')
     for i in range(len(details)):
         details[i] = details[i].text.replace('\n', '').replace(' ', '')
-    # print(details)
     details_dic = {}
     details_dic['Year'] = None
     details_dic['Citedby'] = None
@@ -310,14 +286,12 @@ def get_paper_ieee(paper):
         details_dic['Pages'] = re.findall(re.compile('\d{1,}-\d{1,}'), details_dic['Pages'])
     except:
         details_dic['Pages'] = None
-    # print(details_dic) # string
 
-    ### abstrsct
+    # abstrsct
     abstractlist = paper.find('div',
                               class_="js-displayer-content u-mt-1 stats-SearchResults_DocResult_ViewMore hide")
     abstract = ''
     for str in abstractlist.text.split('\n'):
         if (str.strip() != '' and str.strip() != 'View more'):
             abstract += str.strip() + ' '
-    # print(abstract)
     return document_id, title, ieeeauthor, publish_on, details_dic, abstract

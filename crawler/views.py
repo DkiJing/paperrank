@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from crawler.crawler import crawler_offline
 
 
-keyword_list = [#'recognition',
+keyword_list = ['recognition',
                 'machine+learning']
 
 def call_crawler_offline(request):

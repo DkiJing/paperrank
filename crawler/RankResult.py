@@ -1,9 +1,6 @@
 from crawler.PaperO import createPaper
 from crawler.indexModels import search_index
-# from crawler.DateRank import DateRank
-# from crawler.CitedByRank import CitedByRank
-# from crawler.CitedTimesRank import CitedTimesRank
-# from crawler.SourceRank import SourceRank
+
 de_idList = []
 def getRankedList(mes, date, citedtimes):
     global de_idList
@@ -12,7 +9,7 @@ def getRankedList(mes, date, citedtimes):
         de_idList = idList
     else:
         idList = de_idList
-    print('!!!!!!!!!!!!!!!!!!!!!!')
+    print('-----------------------')
     print(idList)
     paperList = []
     defoult_para = {}
@@ -35,12 +32,7 @@ def getRankedList(mes, date, citedtimes):
         for p in paper.citedBy:
             sum_citedBy += p['cited_times']
         citedBy_list.append(sum_citedBy)
-    # print(date_list)
-    # date_grade = DateRank(date_list).getScoreList()  # {}
-    # citedtimes_grade = CitedTimesRank(citedtimes_list).getScoreList()
-    # citedBy_grade = CitedByRank(citedBy_list).getScoreList()
-    # source_grade = SourceRank(source_list).getScoreList()
-    date_grade = getDateScoreList(date_list)  # {}
+    date_grade = getDateScoreList(date_list)  
     citedtimes_grade = getCitedTimesScoreList(citedtimes_list)
     citedBy_grade = getCitedByScoreList(citedBy_list)
     source_grade = getSourceScoreList(source_list)
@@ -60,11 +52,9 @@ def getRankedList(mes, date, citedtimes):
     finalList = []
     for t in finalRank:
         finalList.append(paperList[t[0]])
-    # print(finalList)
     return finalList
 
 def judgeDC(date, citedtimes):
-    # print(citedtimes)
     default_para = {'date': 1.5, 'citedtimes': 4, 'citedBy': 3, 'source': 1.5}
     if date == '100':
         default_para = {'date': 1, 'citedtimes': 0, 'citedBy': 0, 'source': 0}
@@ -75,18 +65,14 @@ def judgeDC(date, citedtimes):
     elif date == '' or citedtimes == '' :
         return default_para
     else:
-        # print(date)
         total = 5
         date = int(date)
         citedtimes = int(citedtimes)
         date_rate = date/(date+citedtimes)
         cited_rate = citedtimes/(date+citedtimes)
         default_para = {'date': total*date_rate, 'citedtimes': total*cited_rate, 'citedBy': 3, 'source': 1.5}
-        #how to adjust
     return default_para
 
-
-#
 def getDateScoreList(datelist):
     min_ = min(datelist)
     max_ = max(datelist)
